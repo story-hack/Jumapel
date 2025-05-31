@@ -9,7 +9,16 @@ function Header() {
             Jumapel
           </h1>
         </div>
-        <ConnectButton />
+        <ConnectButton
+          accountStatus={{
+            smallScreen: "avatar",
+            largeScreen: "full",
+          }}
+          showBalance={{
+            smallScreen: false,
+            largeScreen: true,
+          }}
+        />
       </div>
     </header>
   );
