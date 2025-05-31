@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { PropsWithChildren } from "react";
 import Web3Providers from "../provider/Web3Provider";
-import ConnectButton from "@/components/ConnectButton";
+import Header from "@/components/Header";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,19 +20,18 @@ export const metadata: Metadata = {
   description: "Dapp for Aeneid",
 };
 
-// export default function RootLayout({
-//   children,
-// }: Readonly<{
-//   children: React.ReactNode;
-// }>) {
-export default function RootLayout({ children }: PropsWithChildren) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Web3Providers>
-          <ConnectButton />
+          <Header />
           {children}
         </Web3Providers>
       </body>
