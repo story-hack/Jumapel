@@ -3,18 +3,18 @@ import { useState } from 'react';
 
 export default function ImageUploadForm() {
   const [ipfsHash, setIpfsHash] = useState<string>('');
+  const [imageHash, setImageHash] = useState<string>('');
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     const fileInput = (e.target as HTMLFormElement).elements.namedItem('file') as HTMLInputElement;
     const file = fileInput.files?.[0];
-    if (!file) return alert('Please select a file'); // Original alert remains
+    if (!file) return alert('Please select a file');
 
     const formData = new FormData();
     formData.append('file', file);
 
-    // Simulating a slight delay for visual feedback if needed, but not adding full loading state
-    // For a real app, you'd want proper loading indicators as in the previous more complete example.
+   
     const button = (e.target as HTMLFormElement).querySelector('button[type="submit"]') as HTMLButtonElement | null;
     if (button) {
         button.disabled = true;
@@ -29,6 +29,7 @@ export default function ImageUploadForm() {
 
         const data = await res.json();
         setIpfsHash(data.IpfsHash);
+        setImageHash(data.imageHash);
     } catch (error) {
         console.error("Upload failed:", error);
         alert('Upload failed. Please try again.'); // Simple error feedback
@@ -92,6 +93,17 @@ export default function ImageUploadForm() {
             </p>
             <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
               Click the hash to view the image on IPFS.
+            </p>
+          </div>
+        )}
+        {imageHash && (
+          <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
+            <p className="text-sm text-slate-600 dark:text-slate-300 break-all">
+              <span className="font-semibold text-slate-700 dark:text-slate-200">IMAGE Hash:</span>{' '}
+              {imageHash}
+            </p>
+            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+              the hash of your image file
             </p>
           </div>
         )}

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PinataSDK } from 'pinata';
+import { toHex } from "viem";
 
 const pinata = new PinataSDK({
   pinataJwt: process.env.PINATA_JWT!,
-  pinataGateway: 'example-gateway.mypinata.cloud', // Replace with your actual gateway
+  pinataGateway: 'orange-bright-loon-792.mypinata.cloud', 
 });
 
 export const config = {
@@ -26,15 +27,20 @@ export async function POST(req: NextRequest) {
     }
 
     const arrayBuffer = await file.arrayBuffer();
-    const blob = new Blob([arrayBuffer], { type: file.type }); // <-- Use native Blob
+    const blob = new Blob([arrayBuffer], { type: file.type }); 
 
     const pinataFile = new File([blob], file.name, { type: file.type });
 
     const uploadResult = await pinata.upload.public.file(pinataFile);
 
+    const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
+
+    const imageHash = toHex(new Uint8Array(hashBuffer), { size: 32 });
+
     return NextResponse.json({
       IpfsHash: uploadResult.cid,
       imageUrl: `https://ipfs.io/ipfs/${uploadResult.cid}`,
+      imageHash: imageHash,
     });
   } catch (error) {
     console.error('Error uploading to Pinata:', error);
