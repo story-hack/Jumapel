@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/api/mint-and-register-ip"
+    "src/app/api/mintNft-resgisterIp-attachLicense"
   ],
   "exclude": ["node_modules"]
 }

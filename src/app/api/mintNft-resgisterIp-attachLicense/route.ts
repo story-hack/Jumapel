@@ -1,5 +1,5 @@
 import { client } from '../../../utils/utils';
-import { uploadJSONToIPFS } from '../../../components/uploadJSONToIPFS'
+import { uploadJSONToIPFS } from '../../../utils/uploadJSONToIPFS'
 import { createHash } from 'crypto';
 import { IpMetadata, LicenseTerms } from '@story-protocol/core-sdk';
 import { NextRequest, NextResponse } from 'next/server';
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     //  ipId?: Address;
     //  tokenId?: bigint;
     const response = await client.ipAsset.mintAndRegisterIp({
-      spgNftContract: "0xc32A8a0FF3beDDDa58393d022aF433e78739FAbc", // deafaultSPGNFTContractAddress
+      spgNftContract: "0x95f8c494Bf35912921f3Fd654381612Ea5990244", // customnftcollection
       ipMetadata: {
         ipMetadataURI: `https://ipfs.io/ipfs/${ipIpfsHash}`,
         ipMetadataHash: `0x${ipHash}`,
