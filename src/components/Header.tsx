@@ -7,7 +7,7 @@ function Header() {
       <div className="max-w-10xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-2">
           <img
-            src="/logo.png"
+            src="/logo.jpg"
             alt="Jumapel Logo"
             className="w-14 h-14 rounded-full bg-white object-cover"
           />
