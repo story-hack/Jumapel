@@ -40,6 +40,12 @@ function Header() {
           >
             Support
           </Link>
+          <Link
+            href="/profile"
+            className="text-white text-2xl hover:underline transition"
+          >
+            Profile
+          </Link>
         </nav>
         <ConnectButton
           accountStatus={{
