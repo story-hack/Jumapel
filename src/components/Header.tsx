@@ -7,11 +7,7 @@ function Header() {
       <div className="max-w-10xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-2">
           <img
-<<<<<<< HEAD
             src="/logo.jpg"
-=======
-            src="/logo.png"
->>>>>>> b43b7158d00fc6aa91a3858453d22d889acc0505
             alt="Jumapel Logo"
             className="w-14 h-14 rounded-full bg-white object-cover"
           />
@@ -44,15 +40,6 @@ function Header() {
           >
             Support
           </Link>
-<<<<<<< HEAD
-=======
-          <Link
-            href="/profile"
-            className="text-white text-2xl hover:underline transition"
-          >
-            Profile
-          </Link>
->>>>>>> b43b7158d00fc6aa91a3858453d22d889acc0505
         </nav>
         <ConnectButton
           accountStatus={{

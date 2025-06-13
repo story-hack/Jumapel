@@ -40,10 +40,36 @@
   --foreground: #171717;
 }
 
+
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Space Grotesk', 'Archivo', 'Archivo Black', Arial, Helvetica, sans-serif !important;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  /* Remove any accidental scaling */
+  /* Do not set zoom or transform here */
+}
+
+/* Remove any global scaling or zoom that could cause layout issues */
+* {
+  box-sizing: border-box;
+}
+
+
+
+@media (max-width: 900px) {
+  html {
+    font-size: 15px;
+  }
+}
+@media (max-width: 600px) {
+  html {
+    font-size: 14px;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

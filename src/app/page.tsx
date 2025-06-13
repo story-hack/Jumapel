@@ -25,7 +25,7 @@ export default function Home() {
         <section className="w-full bg-[#232323] rounded-none flex flex-col md:flex-row overflow-hidden shadow-xl min-h-[80vh]">
           <div className="flex-1 flex flex-col justify-start pl-15 px-5 pt-40 pb-16 text-white">
             <div className="mb-5">
-              <h1 className="text-7xl font-semibold md:text-6xl mb-6">
+              <h1 className="text-5xl font-semibold  mb-6">
                 Tokenize your idea{" "}
                 <span className="text-[#bfe3fa]">
                   — unlock value, ownership, and opportunity.
