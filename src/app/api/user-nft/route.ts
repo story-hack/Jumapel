@@ -3,8 +3,8 @@ import { Alchemy, Network } from "alchemy-sdk";
 
 
 const config = {
-    apiKey: process.env.ALCHEMY_API_KEY, // Replace with your API key
-    network: Network.STORY_AENEID, // Replace with your network
+    apiKey: process.env.ALCHEMY_API_KEY, 
+    network: Network.STORY_AENEID, 
 };
 
 
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
             contractAddresses: [nftCollectionAddress],
         });
         
-        console.log("Owned NFT", response.ownedNfts);
+        // console.log("Owned NFT", response.ownedNfts);
         return NextResponse.json(response.ownedNfts);
     } catch (error) {
         console.error('Error fetching NFTs:', error);

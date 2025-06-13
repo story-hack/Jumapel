@@ -15,16 +15,18 @@ interface NftMetadata {
 interface MintRequestPayload {
   ipMetadata: IpMetadata;
   nftMetadata: NftMetadata;
+  walletAddress: string; 
 }
 
 export async function POST(req: NextRequest) {
   try {
     
-    const { ipMetadata, nftMetadata }: MintRequestPayload = await req.json();
+    const { ipMetadata, nftMetadata, walletAddress }: MintRequestPayload = await req.json();
 
-    if (!ipMetadata || !nftMetadata) {
+
+    if (!ipMetadata || !nftMetadata || !walletAddress) {
       return NextResponse.json(
-        { error: 'Missing ipMetadata or nftMetadata in request body.' },
+        { error: 'Missing ipMetadata, nftMetadata, or walletAddress in request body.' },
         { status: 400 }
       );
     }
@@ -38,22 +40,8 @@ export async function POST(req: NextRequest) {
     const ipHash = createHash('sha256').update(JSON.stringify(ipMetadata)).digest('hex');
     const nftHash = createHash('sha256').update(JSON.stringify(nftMetadata)).digest('hex');
 
-    // Register the NFT as an IP Asset
-    //RegisterIpResponse:
-    //  txHash?: Hex;
-    //  receipt?: TransactionReceipt;
-    //  ipId?: Address;
-    //  tokenId?: bigint;
-    const response = await client.ipAsset.mintAndRegisterIp({
-      spgNftContract: "0x95f8c494Bf35912921f3Fd654381612Ea5990244", // customnftcollection
-      ipMetadata: {
-        ipMetadataURI: `https://ipfs.io/ipfs/${ipIpfsHash}`,
-        ipMetadataHash: `0x${ipHash}`,
-        nftMetadataURI: `https://ipfs.io/ipfs/${nftIpfsHash}`,
-        nftMetadataHash: `0x${nftHash}`,
-      },
-      txOptions: { waitForTransaction: true },
-    });
+
+
     const brandIpaLicenseTerms: LicenseTerms = {
       transferable: true,
       royaltyPolicy: "0xBe54FB168b3c982b7AaE60dB6CF75Bd8447b390E",
@@ -74,30 +62,38 @@ export async function POST(req: NextRequest) {
       uri: ""
      };
 
-    const resgisterLicence = await client.license.registerPILTerms({
-      ...brandIpaLicenseTerms,
+
+    const response = await client.ipAsset.mintAndRegisterIpAssetWithPilTerms({
+      spgNftContract: "0x95f8c494Bf35912921f3Fd654381612Ea5990244", // customnftcollection
+      licenseTermsData: [{ terms: brandIpaLicenseTerms }],
+      recipient: walletAddress as Address,
+      ipMetadata: {
+        ipMetadataURI: `https://ipfs.io/ipfs/${ipIpfsHash}`,
+        ipMetadataHash: `0x${ipHash}`,
+        nftMetadataURI: `https://ipfs.io/ipfs/${nftIpfsHash}`,
+        nftMetadataHash: `0x${nftHash}`,
+      },
       txOptions: { waitForTransaction: true },
     });
     
-    const attachLicense = await client.license.attachLicenseTerms({
-      // insert your newly created license terms id here
-      licenseTermsId: resgisterLicence.licenseTermsId as bigint,
-      // insert the ipId you want to attach terms to here
-      ipId: response.ipId as Address,
-      txOptions: { waitForTransaction: true },
-    });
+    console.log(`
+      Token ID: ${response.tokenId}, 
+      IPA ID: ${response.ipId}, 
+      License Terms ID: ${response.licenseTermsIds}
+    `);
+
 
     return NextResponse.json({
       message: `Root IPA created at transaction hash ${response.txHash}, IPA ID: ${response.ipId}`,
       transactionHash: response.txHash,
       ipId: response.ipId,
       explorerUrl: `https://aeneid.explorer.story.foundation/ipa/${response.ipId}`,
-      attachedLicense: `Attached License Terms to IPA at transaction hash ${attachLicense.txHash}.`
+      attachedLicense: `Attached License Terms to IPA at transaction hash ${response.txHash}.`
     }, { status: 200 });
 
-  } catch (error: unknown) { // Use 'unknown' for better type safety in catch
+  } catch (error: unknown) { 
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
-    console.error('Error in minting and registering IP asset:', error);
+    console.error('Error in minting and registering:', error);
     return NextResponse.json(
       { error: 'Failed to mint and register IP asset.', details: errorMessage },
       { status: 500 }
@@ -111,4 +107,4 @@ const methodNotAllowed = () => NextResponse.json({ message: 'Method Not Allowed.
 export const GET = methodNotAllowed;
 export const PUT = methodNotAllowed;
 export const DELETE = methodNotAllowed;
-export const PATCH = methodNotAllowed; // Add PATCH if not already covered
+export const PATCH = methodNotAllowed; 
