@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       IpfsHash: uploadResult.cid,
-      imageUrl: `https://ipfs.io/ipfs/${uploadResult.cid}`,
+      imageUrl: `https://orange-bright-loon-792.mypinata.cloud/ipfs/${uploadResult.cid}`, // n ipfs.io not working 
       imageHash: imageHash,
     });
   } catch (error) {

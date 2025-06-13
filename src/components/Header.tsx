@@ -1,4 +1,5 @@
 import { ConnectButton } from "@tomo-inc/tomo-evm-kit";
+import Image from "next/image";
 import Link from "next/link";
 
 function Header() {
@@ -6,7 +7,9 @@ function Header() {
     <header className="w-full px-6 pt-8 pb-8 bg-[#232323] border-b border-transparent">
       <div className="max-w-10xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <img
+          <Image 
+            width={56}
+            height={56}
             src="/logo.jpg"
             alt="Jumapel Logo"
             className="w-14 h-14 rounded-full bg-white object-cover"
@@ -45,6 +48,12 @@ function Header() {
             className="text-white text-2xl hover:underline transition"
           >
             Profile
+          </Link>
+          <Link
+            href="/form"
+            className="text-white text-2xl hover:underline transition"
+          >
+            Form
           </Link>
         </nav>
         <ConnectButton
