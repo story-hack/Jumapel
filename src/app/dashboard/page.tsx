@@ -15,14 +15,16 @@ export default function Dashboard() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
   const [, setError] = useState("");
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [, setImageData] = useState<{
     ipfsHash: string;
     imageHash: string;
     imageUrl: string;
   } | null>(null);
-  const imageInputRef = useRef(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [refinedIdeaData, setRefinedIdeaData] = useState<{
     brandName: string;
@@ -33,6 +35,14 @@ export default function Dashboard() {
 
   async function handleSend(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    
+    // If we're in image upload mode and have a file, process the image
+    if (showImageUpload && selectedFile) {
+      await handleImageUpload();
+      return;
+    }
+    
+    // Otherwise, process the text input
     if (!input.trim()) return;
     setMessages((prev) => [...prev, { role: "user", content: input }]);
     setLoading(true);
@@ -75,13 +85,19 @@ export default function Dashboard() {
     }
   }
 
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) return;
     const file = e.target.files[0];
     if (!file) return;
+    setSelectedFile(file);
+  }
+
+  async function handleImageUpload() {
+    if (!selectedFile) return;
+    
     const formData = new FormData();
-    formData.append("file", file);
-    setLoading(true);
+    formData.append("file", selectedFile);
+    setImageUploading(true);
     try {
       const imageRes = await fetch("/api/upload-image", {
         method: "POST",
@@ -142,13 +158,13 @@ export default function Dashboard() {
         { role: "agent", content: "Network error during minting." },
       ]);
     } finally {
-      setLoading(false);
+      setImageUploading(false);
     }
   }
 
   return (
     <main className="min-h-screen w-full flex">
-      {loading && <Loader />}
+      {(loading || imageUploading) && <Loader />}
       <section className="w-1/2 min-h-screen flex flex-col justify-center items-center bg-[#181818] p-12">
         <div className="w-full flex gap-6">
           <div className="flex-1 bg-gradient-to-br from-[#232323] to-[#111] rounded-2xl p-6 shadow-lg text-white min-w-[220px] max-w-xs flex flex-col justify-between">
@@ -221,7 +237,7 @@ export default function Dashboard() {
                   </div>
                 </div>
               ))}
-              {loading && (
+              {loading && !showImageUpload && (
                 <div className="w-full flex justify-start mb-4">
                   <div className="rounded-2xl px-5 py-3 bg-[#232323] text-white border border-[#333] max-w-[80%] animate-pulse">
                     Thinking...
@@ -232,43 +248,61 @@ export default function Dashboard() {
           </div>
           <form
             onSubmit={handleSend}
-            className="w-full flex gap-2 p-6 bg-[#232323] border-t border-[#333] fixed bottom-0 right-0 max-w-[50vw]"
+            className="w-full flex flex-col gap-2 p-6 bg-[#232323] border-t border-[#333] fixed bottom-0 right-0 max-w-[50vw]"
             style={{ zIndex: 10 }}
           >
-            <input
-              type="text"
-              className="flex-1 rounded-lg text-lg px-4 py-2 bg-[#181818] text-white border border-[#333] focus:outline-none"
-              placeholder="Type your product idea..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              disabled={loading || showImageUpload}
-            />
-            <button
-              type="submit"
-              className="bg-[#0080ff] text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-[#005fa3] transition"
-              disabled={loading || !input.trim() || showImageUpload}
-            >
-              Send
-            </button>
+            {/* Text input - shown when not in image upload mode */}
+            {!showImageUpload && (
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  className="flex-1 rounded-lg text-lg px-4 py-2 bg-[#181818] text-white border border-[#333] focus:outline-none"
+                  placeholder="Type your product idea..."
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  disabled={loading}
+                />
+                <button
+                  type="submit"
+                  className="bg-[#0080ff] text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-[#005fa3] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={loading || !input.trim()}
+                >
+                  Send
+                </button>
+              </div>
+            )}
+
+            {/* Image upload - shown when in image upload mode */}
+            {showImageUpload && (
+              <div className="flex flex-col gap-3">
+                <label className="text-white font-semibold text-sm">
+                  Upload an image for your NFT:
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    ref={imageInputRef}
+                    className="flex-1 text-white bg-[#181818] border border-[#444] rounded px-4 py-2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-[#0080ff] file:text-white hover:file:bg-[#005fa3] cursor-pointer"
+                    disabled={imageUploading}
+                  />
+                  <button
+                    type="submit"
+                    className="bg-[#0080ff] text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-[#005fa3] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={imageUploading || !selectedFile}
+                  >
+                    {imageUploading ? "Regestering as IPA..." : "Mint "}
+                  </button>
+                </div>
+                {selectedFile && (
+                  <div className="text-green-400 text-sm">
+                    Selected: {selectedFile.name}
+                  </div>
+                )}
+              </div>
+            )}
           </form>
-          {showImageUpload && (
-  <div className="p-6 bg-[#232323] border-t border-[#333] w-full flex flex-col items-center gap-4">
-    <label
-      htmlFor="imageUpload"
-      className="text-white font-semibold text-sm"
-    >
-      Upload an image for your NFT:
-    </label>
-    <input
-      id="imageUpload"
-      type="file"
-      accept="image/*"
-      onChange={handleImageUpload}
-      ref={imageInputRef}
-      className="text-white bg-[#181818] border border-[#444] rounded px-4 py-2 w-full max-w-md file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-[#0080ff] file:text-white hover:file:bg-[#005fa3] cursor-pointer"
-    />
-  </div>
-)}
         </div>
       </section>
     </main>
