@@ -1,6 +1,169 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Jumapel 🚀
 
-## Getting Started
+![Surreal Buildathon](https://img.shields.io/badge/Surreal-Buildathon-5f4def)
+![AI Powered](https://img.shields.io/badge/AI-Powered-orange)
+![Tomo Integrated](https://img.shields.io/badge/Tomo-Integrated-blue)
+
+> **Tokenize your product idea, secure its identity and creative ownership on the internet
+
+Jumapel is a decentralised platform that uses AI to generate unique brand names and domain suggestions tailored to your needs. Users can mint their chosen names as protected on-chain IP, securing their identity and creative ownership on the internet.
+
+<div align="center">
+  <img src="/public/logo.jpg" alt="YieldStark Logo" width="200" height="200"/>
+</div>
+
+## 🎯 Problem Statement
+
+Early-stage startup and product ideas face three major challenges:
+
+ -Lack of ownership protection, leaving ideas vulnerable to theft or replication.
+
+ -Brand identity struggles, with founders unable to craft distinctive, memorable names.
+
+ -No direct path to value, as there's no system to tokenize, showcase, or monetize ideas in early stages.
+
+## 💡 Solution
+
+Jumapel addresses the protection and commercialization of early-stage ideas with three core components:
+
+1. **AI-Powered Brand Intelligence**
+   - Uses Artificial Intelligence to generate unique, relevant brand names
+   - Context-aware suggestions based on user-submitted ideasReal-time volatility and correlation tracking
+   - Tailored to product category, tone, and target audience
+
+2. **Onchain Idea Tokenization**
+   - Mints submitted ideas and generated brand names as NFTs
+   - Includes IP metadata like timestamp, wallet address, and summary
+   - Ensures immutable proof of origin, powered by Story Protocol
+
+3. **Idea Marketplace**
+   - Securely lists idea NFTs for discovery or purchase
+   - Enables early validation, exposure, and collaboration
+   - Opens new channels for creators to monetize innovation
+
+---
+
+## 🧠 AI-Powered Brand & IP Creation
+Jumapel leverages advanced AI and onchain protocols through multiple components:
+
+### 1. Brand Intelligence Engine
+
+**AI-Driven Naming & Branding**
+- Context-aware brand name generation (see `src/app/api/agentTest/route.ts`)
+- Creative, memorable, and relevant suggestions
+- Domain availability checks (real-time)
+
+**Brand Metadata Enrichment**
+- Product idea refinement and summarization
+- Target audience and value proposition extraction
+- Brand positioning insights
+
+### 2. Onchain Tokenization Engine
+
+```typescript
+// src/app/api/agentTest/route.ts (AI agent endpoint)
+const prompt = `You are a creative branding assistant. Given a product idea, suggest a catchy, unique brand name and check for an available .com domain. Reply in this JSON format: { "brandName": "...", "availableDomain": "..." }. Product idea: "${idea}"`;
+
+// src/app/api/mintNft-resgisterIp-attachLicense/route.ts (NFT minting)
+const ipMetadata = {
+  name: brandName,
+  description: idea,
+  availableDomain,
+  // ...other fields
+};
+const nftMetadata = {
+  name: brandName,
+  description: idea,
+  image: logo,
+  attributes: [{ key: "Available Domain", value: availableDomain }],
+};
+await fetch("/api/mintNft-resgisterIp-attachLicense", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ ipMetadata, nftMetadata, walletAddress }),
+});
+```
+
+### 3. Autonomous Features
+
+**Effortless Brand Creation**
+- One-click brand & domain generation via chat UI (`src/app/dashboard/page.tsx`)
+- Automated IP metadata packaging
+
+**Onchain Minting**
+- Immutable proof of idea ownership
+- NFT metadata includes brand, domain, and creator
+
+**Marketplace Integration**
+- List and showcase idea NFTs
+- Enable collaboration and early monetization
+
+### 4. AI & Protocol Architecture
+
+```
+┌────────────────────────────┐    ┌────────────────────────────┐    ┌────────────────────────────┐
+│  AI Brand Agent (API)      │───▶│  Tokenization Engine       │───▶│  Marketplace & Discovery   │
+│  (agentTest/route.ts)      │    │  (mintNft-resgisterIp...)  │    │  (marketplace/page.tsx)    │
+└────────────────────────────┘    └────────────────────────────┘    └────────────────────────────┘
+         ▲                              │                                 │
+         │                              ▼                                 ▼
+┌────────────────────────────┐    ┌────────────────────────────┐    ┌────────────────────────────┐
+│  User Chat (Dashboard)     │    │  IP Metadata Packaging     │    │  Ownership & Monetization │
+│  (dashboard/page.tsx)      │────▶  (NFT + Brand + Domain)   │────▶  (NFT Listing, Sale)      │
+└────────────────────────────┘    └────────────────────────────┘    └────────────────────────────┘
+```
+
+### 5. Key AI Features
+
+**Brand & Domain Generation**
+- Unique, context-aware brand names
+- Real-time .com domain availability
+
+**Idea Refinement**
+- Polished, concise summaries for NFTs
+- Value proposition extraction
+
+**Ownership & Proof**
+- Immutable onchain minting
+- Metadata includes timestamp, wallet, and summary
+
+**Marketplace-Ready**
+- Early validation and exposure
+- Collaboration and monetization channels
+
+---
+
+## 🏗 Architecture
+
+```plaintext
+Jumapel/
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── agentTest/route.ts                # AI brand/domain agent endpoint
+│   │   │   ├── mintNft-resgisterIp-attachLicense/route.ts  # NFT minting & IP registration
+│   │   │   ├── user-nft/route.ts                 # User NFT collection API
+│   │   │   └── upload-image/route.ts             # Image upload API
+│   │   ├── dashboard/page.tsx                    # Dashboard & chat UI
+│   │   ├── marketplace/page.tsx                  # NFT marketplace UI
+│   │   ├── profile/page.tsx                      # User profile page
+│   │   └── ...                                   # Other app pages
+│   ├── components/
+│   │   ├── Header.tsx                            # App header & navigation
+│   │   ├── Card.tsx                              # UI card component
+│   │   ├── UsersNftCollection.tsx                # User NFT display
+│   │   └── ...                                   # Other UI components
+│   ├── provider/Web3Provider.tsx                 # Web3 context provider
+│   └── utils/
+│       ├── openai.ts / openai.js                 # OpenAI/OpenRouter integration
+│       ├── uploadJSONToIPFS.ts                   # IPFS upload utility
+│       └── utils.ts                              # General utilities
+├── public/                                       # Static assets (logo, NFTs, fonts)
+├── README.md                                     # Project documentation
+└── ...                                           # Config, lockfiles, etc.
+```
+
+---
 
 First, run the development server:
 
