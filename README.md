@@ -177,7 +177,7 @@ Jumapel/
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- yarn
+- npm
 - An EVM Compatible wallet (e.g., Metamask)
 
 First, run the development server:
@@ -202,4 +202,47 @@ Detailed documentation is available in the `docs` directory:
 - [Architecture](docs/ARCHITECTURE.md) - System architecture and components
 - [Development](docs/DEVELOPMENT.md) - Development setup and guidelines
 
-## 📈 Performance
+## 🛣 Roadmap
+
+### Phase 1: Core Infrastructure (Current)
+- [x] AI-powered brand name generator
+- [x] NFT minting on Story Protocol
+- [x] Basic chat UI with idea input and name output
+- [x] Onchain metadata storage
+
+### Phase 2: Creator Tools (Q3 2025)
+- [ ] Pitch deck generation from submitted ideas
+- [ ] Idea collaboration feature (multi-wallet ownership)
+- [ ] Advanced execution algorithms
+- [ ] API access for external idea-to-NFT integrations
+
+## 👥 Target Users
+1. **Early-stage Founders**
+   - Need fast idea protection
+   - Looking for unique brand names
+   - Want to prove ownership onchain
+
+2. **Builders & Developers**
+   - Launching new tools or dApps
+   - Need instant branding
+   - Prefer secure, verifiable IP
+
+3. **Web3 Creators**
+   - Explore, mint, or collect idea-NFTs
+   - Participate in innovation marketplace
+   - Support or co-own startup concepts
+
+
+## 📢 Stay Connected
+Follow us for updates, insights, and behind-the-scenes development:
+
+🐦 Follow us on X: [@Jumapel](https://x.com/Jumapel_org)
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+Story Protocol
+Tomo 
+Encode Club
