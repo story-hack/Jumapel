@@ -164,36 +164,33 @@ export const UsersNftCollection = () => {
         if (!response.ok) throw new Error("Failed to fetch NFTs");
 
         const rawNFTs: NFT[] = await response.json();
-        // console.log("rawnft: ", rawNFTs);
-        const enrichedNFTs: NFT[] = [];
 
-        for (const nft of rawNFTs) {
-          // const txHash = nft.mint.transactionHash;
-          const tokenId = nft.tokenId.toString();
-          // console.log(tokenId)
-          const result = await fetchMetadataUri(tokenId);
-          // console.log("result: ", result);  
-          // const result = await fetchMetadataUri(txHash); // renamed for clarity
-
-          if (result) {
-            const { metadataUri, ipId } = result;
-            nft.ipId = ipId;
-
-            const creators = await fetchCreatorsFromUri(metadataUri);
-            const pdfUrl = await fetchPdfFromUri(metadataUri);
-            if (pdfUrl) {
-              nft.pdf = pdfUrl;
+        const enrichedNFTs = await Promise.all(
+          rawNFTs.map(async (nft) => {
+            const tokenId = nft.tokenId.toString();
+            const result = await fetchMetadataUri(tokenId);
+        
+            if (result) {
+              const { metadataUri, ipId } = result;
+              nft.ipId = ipId;
+        
+              const [creators, pdfUrl] = await Promise.all([
+                fetchCreatorsFromUri(metadataUri),
+                fetchPdfFromUri(metadataUri),
+              ]);
+        
+              if (pdfUrl) {
+                nft.pdf = pdfUrl;
+              }
+              if (creators && Array.isArray(creators)) {
+                nft.creators = creators;
+              }
             }
-            if (creators && Array.isArray(creators)) {
-              nft.creators = creators;
-            }
-          }
-
-          enrichedNFTs.push(nft);
-          // console.log("Enriched NFT:", enrichedNFTs);
-        }
-
-        setNfts(enrichedNFTs);
+        
+            return nft;
+          })
+        );
+        setNfts(enrichedNFTs.reverse());
       } catch (err) {
         console.error("Error in fetchNFTs:", err);
         setError(err instanceof Error ? err.message : "An error occurred");
