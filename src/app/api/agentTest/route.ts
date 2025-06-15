@@ -20,12 +20,18 @@ export async function POST(req: Request) {
 
                     Step 3: Search the web to find an available .com domain related to the brand name. Prioritize exact matches, but creative and relevant alternatives are acceptable.
 
+                    Step 4: Estimate the potential market value (in USD) of this idea based on its uniqueness, market trends, and comparable products. Provide a short justification for your estimate.
+
                     Return your answer in the following JSON format:
 
                     {
                       "refinedIdea": "...",
                       "brandName": "...",
-                      "availableDomain": "..."
+                      "availableDomain": "...",
+                      "marketValue": {
+                        "estimate": "...",
+                        "justification": "..."
+                      }
                     }
 
                     Raw idea: "${idea}"`;
@@ -66,7 +72,8 @@ export async function POST(req: Request) {
     return Response.json({
       brandName: result.brandName || "",
       domain: result.availableDomain || result.domain || "N/A",
-      refinedIdea: result.refinedIdea || ""
+      refinedIdea: result.refinedIdea || "",
+      marketValue: result.marketValue || { estimate: "N/A", justification: "N/A" }
     });
 
   } catch (error: unknown) {

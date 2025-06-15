@@ -30,6 +30,8 @@ export default function Dashboard() {
     brandName: string;
     refinedIdea: string;
     domain: string;
+    marketValue: string;
+    marketValueJustification: string;
   } | null>(null);
   const { address } = useAccount();
 
@@ -42,7 +44,7 @@ export default function Dashboard() {
       return;
     }
     
-    // Otherwise, process the text input
+   
     if (!input.trim()) return;
     setMessages((prev) => [...prev, { role: "user", content: input }]);
     setLoading(true);
@@ -61,7 +63,7 @@ export default function Dashboard() {
         ...prev,
         {
           role: "agent",
-          content: `Brand: ${data.brandName}\nDomain: ${data.domain}\nRefined Idea: ${data.refinedIdea}`,
+          content: `Brand: ${data.brandName}\n\nDomain: ${data.domain}\n\nRefined Idea: ${data.refinedIdea}\n\nMarket Value Estimate: ${data.marketValue.estimate}\n\nJustification: ${data.marketValue.justification}`,
         },
         {
           role: "agent",
@@ -167,7 +169,7 @@ export default function Dashboard() {
     <main className="min-h-screen w-full flex">
       {(loading || imageUploading) && <Loader />}
       <section className="w-1/2 min-h-screen flex flex-col justify-center items-center bg-[#181818] p-12">
-        <div className="w-full flex gap-6">
+        <div className="w-full flex flex-wrap gap-6">
           <div className="flex-1 bg-gradient-to-br from-[#232323] to-[#111] rounded-2xl p-6 shadow-lg text-white min-w-[220px] max-w-xs flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-2 mb-2">
@@ -211,6 +213,21 @@ export default function Dashboard() {
               <div className="text-sm text-gray-700">
                 Review the AI&apos;s suggestion and mint your idea, brand, and domain
                 as an NFT onchain.
+              </div>
+            </div>
+          </div>
+
+          {/* 4th Box: Check Market Value */}
+          <div className="flex-1 bg-white rounded-2xl p-6 shadow text-[#232323] min-w-[220px] max-w-xs flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-b from-[#ffb347] to-[#ffcc80] flex items-center justify-center text-lg font-bold">
+                  4
+                </div>
+                <span className="font-semibold text-base">Check Market Value</span>
+              </div>
+              <div className="text-sm text-gray-700">
+                Instantly get an estimated market value for your idea based on its uniqueness and current trends.
               </div>
             </div>
           </div>
