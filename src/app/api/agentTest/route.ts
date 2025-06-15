@@ -1,5 +1,6 @@
 import { openai } from "@/utils/openai";
 import { createWhitepaperPDF, uploadPDFToIPFS } from "@/utils/pdfWhitepaper";
+import { toHex } from "viem";
 
 export async function POST(req: Request) {
   try {
@@ -91,9 +92,12 @@ export async function POST(req: Request) {
 
     // Generate PDF from whitepaper object and upload to IPFS
     let whitepaperPdfUrl = "";
+    let pdfHash = "";
     try {
       if (result.whitepaper) {
         const pdfBuffer = await createWhitepaperPDF(result.whitepaper);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", pdfBuffer);
+        pdfHash = toHex(new Uint8Array(hashBuffer), { size: 32 });
         const ipfsHash = await uploadPDFToIPFS(pdfBuffer, "whitepaper.pdf");
         whitepaperPdfUrl = `https://orange-bright-loon-792.mypinata.cloud/ipfs/${ipfsHash}`;
       }
@@ -107,6 +111,7 @@ export async function POST(req: Request) {
       refinedIdea: result.refinedIdea || "",
       marketValue: result.marketValue || { estimate: "N/A", justification: "N/A" },
       whitepaperPdfUrl,
+      pdfHash
     });
 
   } catch (error: unknown) {

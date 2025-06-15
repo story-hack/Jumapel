@@ -26,6 +26,7 @@ interface NFT {
   };
   creators?: Creator[];
   ipId?: string;
+  pdf?: string;
 }
 
 interface Creator {
@@ -34,12 +35,12 @@ interface Creator {
   contributionPercent: number;
 }
 
-interface TxData {
-  data?: Array<{
-    actionType?: string;
-    ipId?: string;
-  }>;
-}
+// interface TxData {
+//   data?: Array<{
+//     actionType?: string;
+//     ipId?: string;
+//   }>;
+// }
 
 export const UsersNftCollection = () => {
   const { address } = useAccount();
@@ -48,37 +49,58 @@ export const UsersNftCollection = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const extractIpIdFromTxData = (txData: TxData): string | null => {
-      const actions = txData?.data;
-      if (!actions || !Array.isArray(actions)) return null;
+    // const extractIpIdFromTxData = (txData: TxData): string | null => {
+    //   const actions = txData?.data;
+    //   if (!actions || !Array.isArray(actions)) return null;
 
-      // Prefer the "Register" actionType if available
-      const registerAction = actions.find(
-        (action) => action.actionType === "Register"
-      );
-      if (registerAction?.ipId) return registerAction.ipId;
+    //   // Prefer the "Register" actionType if available
+    //   const registerAction = actions.find(
+    //     (action) => action.actionType === "Register"
+    //   );
+    //   if (registerAction?.ipId) return registerAction.ipId;
 
-      // Fallback to the first one with ipId
-      const anyIpAction = actions.find((action) => action.ipId);
-      return anyIpAction?.ipId || null;
-    };
+    //   // Fallback to the first one with ipId
+    //   const anyIpAction = actions.find((action) => action.ipId);
+    //   return anyIpAction?.ipId || null;
+    // };
 
     const fetchMetadataUri = async (
-      transactionHash: string
+      tokenID: string
     ): Promise<{ metadataUri: string; ipId: string } | null> => {
       try {
-        const txResponse = await fetch(
-          `https://api.storyapis.com/api/v3/transactions/${transactionHash}`,
+        // const txResponse = await fetch(
+        //   `https://api.storyapis.com/api/v3/transactions/${transactionHash}`,
+        //   {
+        //     method: "GET",
+        //     headers: {
+        //       "X-Api-Key": "MhBsxkU1z9fG6TofE59KqiiWV-YlYE8Q4awlLQehF3U",
+        //       "X-Chain": "story-aeneid",
+        //     },
+        //   }
+        // );
+        // const txData = await txResponse.json();
+        // const ipId = extractIpIdFromTxData(txData);
+        const response = await fetch(
+          "https://api.storyapis.com/api/v3/assets",
           {
-            method: "GET",
+            method: "POST",
             headers: {
               "X-Api-Key": "MhBsxkU1z9fG6TofE59KqiiWV-YlYE8Q4awlLQehF3U",
               "X-Chain": "story-aeneid",
+              "Content-Type": "application/json",
             },
+            body: JSON.stringify({
+              options: {
+                tokenContractIds: [
+                  "0x95f8c494Bf35912921f3Fd654381612Ea5990244",
+                ],
+                tokenIds: [tokenID],
+              },
+            }),
           }
         );
-        const txData = await txResponse.json();
-        const ipId = extractIpIdFromTxData(txData);
+        const assetData = await response.json();
+        const ipId = assetData?.data?.[0]?.ipId;
         if (!ipId) return null;
 
         const metadataResponse = await fetch(
@@ -93,7 +115,7 @@ export const UsersNftCollection = () => {
         );
         const metadataData = await metadataResponse.json();
         const metadataUri = metadataData?.metadataUri;
-
+        // console.log(metadataData)
         if (!metadataUri) return null;
 
         return { metadataUri, ipId };
@@ -115,6 +137,21 @@ export const UsersNftCollection = () => {
         return null;
       }
     };
+    const fetchPdfFromUri = async (uri: string): Promise<string | null> => {
+      try {
+        const response = await fetch(uri);
+        if (!response.ok) throw new Error("Failed to fetch PDF");
+        const metadata = await response.json();
+        if (metadata?.mediaType == "image/png") {
+          return metadata.mediaUrl;
+        } else {
+          return null;
+        }
+      } catch (err) {
+        console.error("Error fetching PDF from metadata URI:", err);
+        return null;
+      }
+    };
 
     const fetchNFTs = async () => {
       if (!address) {
@@ -127,23 +164,33 @@ export const UsersNftCollection = () => {
         if (!response.ok) throw new Error("Failed to fetch NFTs");
 
         const rawNFTs: NFT[] = await response.json();
+        // console.log("rawnft: ", rawNFTs);
         const enrichedNFTs: NFT[] = [];
 
         for (const nft of rawNFTs) {
-          const txHash = nft.mint.transactionHash;
-          const result = await fetchMetadataUri(txHash); // renamed for clarity
+          // const txHash = nft.mint.transactionHash;
+          const tokenId = nft.tokenId.toString();
+          // console.log(tokenId)
+          const result = await fetchMetadataUri(tokenId);
+          // console.log("result: ", result);  
+          // const result = await fetchMetadataUri(txHash); // renamed for clarity
 
           if (result) {
             const { metadataUri, ipId } = result;
-            nft.ipId = ipId; // ✅ store ipId in nft
+            nft.ipId = ipId;
 
             const creators = await fetchCreatorsFromUri(metadataUri);
+            const pdfUrl = await fetchPdfFromUri(metadataUri);
+            if (pdfUrl) {
+              nft.pdf = pdfUrl;
+            }
             if (creators && Array.isArray(creators)) {
               nft.creators = creators;
             }
           }
 
           enrichedNFTs.push(nft);
+          // console.log("Enriched NFT:", enrichedNFTs);
         }
 
         setNfts(enrichedNFTs);
@@ -158,7 +205,12 @@ export const UsersNftCollection = () => {
     fetchNFTs();
   }, [address]);
 
-  if (loading) return <div><Loader /></div>;
+  if (loading)
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
   if (error) return <div>Error: {error}</div>;
   if (!address)
     return (
@@ -184,6 +236,7 @@ export const UsersNftCollection = () => {
               description={nft.description}
               creators={nft.creators || []}
               ipId={nft.ipId}
+              pdf={nft.pdf} 
             />
           ))}
         </div>

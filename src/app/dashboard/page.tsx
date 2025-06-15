@@ -32,6 +32,8 @@ export default function Dashboard() {
     domain: string;
     marketValue: string;
     marketValueJustification: string;
+    whitepaperPdfUrl: string;
+    pdfHash: string;
   } | null>(null);
   const { address } = useAccount();
 
@@ -123,9 +125,9 @@ export default function Dashboard() {
           creators: [],
           image: data.imageUrl,
           imageHash: data.imageHash,
-          mediaUrl: data.imageUrl,
-          mediaHash: data.imageHash,
-          mediaType: "image/jpeg",
+          mediaUrl: refinedIdeaData.whitepaperPdfUrl,
+          mediaHash: refinedIdeaData.pdfHash,
+          mediaType: "image/png",
         },
         nftMetadata: {
           name: refinedIdeaData.brandName,

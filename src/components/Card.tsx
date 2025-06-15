@@ -15,6 +15,7 @@ interface NFTCardProps {
     contributionPercent: number;
   }[];
   ipId?: string;
+  pdf?: string; // Optional PDF URL or placeholder text
 }
 
 export const NFTCard: React.FC<NFTCardProps> = ({
@@ -23,7 +24,8 @@ export const NFTCard: React.FC<NFTCardProps> = ({
   description,
   alt = "NFT Image",
   creators = [],
-  ipId ,
+  ipId,
+  pdf = "No PDF Available",
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -191,11 +193,11 @@ export const NFTCard: React.FC<NFTCardProps> = ({
                     </div> */}
 
                     {/* Action Buttons Placeholder */}
-                    <div className="flex gap-3 pt-4">
+                    <div className="flex flex-col sm:flex-row gap-3 pt-4">
                       <button
                         onClick={() =>
                           window.open(
-                            `https://aeneid.explorer.story.foundation/ipa/${ipId}`, 
+                            `https://aeneid.explorer.story.foundation/ipa/${ipId}`,
                             "_blank"
                           )
                         }
@@ -207,6 +209,15 @@ export const NFTCard: React.FC<NFTCardProps> = ({
                       <button className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 px-6 rounded-xl font-semibold transition-colors duration-200">
                         Make Offer
                       </button>
+
+                      {pdf !== "No PDF Available" && (
+                        <button
+                          onClick={() => window.open(pdf, "_blank")}
+                          className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 px-6 rounded-xl font-semibold transition-colors duration-200"
+                        >
+                          View Whitepaper
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
