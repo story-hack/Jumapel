@@ -9,6 +9,12 @@ interface NFTCardProps {
   title: string;
   description: string;
   alt?: string;
+  creators?: {
+    name: string;
+    address: string;
+    contributionPercent: number;
+  }[];
+  ipId?: string;
 }
 
 export const NFTCard: React.FC<NFTCardProps> = ({
@@ -16,6 +22,8 @@ export const NFTCard: React.FC<NFTCardProps> = ({
   title,
   description,
   alt = "NFT Image",
+  creators = [],
+  ipId ,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -140,38 +148,62 @@ export const NFTCard: React.FC<NFTCardProps> = ({
 
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <span className="text-gray-500">Token ID:</span>
-                        <p className="font-medium text-gray-900">#001</p>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Creator:</span>
-                        <p className="font-medium text-gray-900">Artist Name</p>
+                        <span className="text-gray-500">Creator(s):</span>
+                        <div className="space-y-1 mt-1">
+                          {creators.length > 0 ? (
+                            creators.map((creator, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => {
+                                  navigator.clipboard.writeText(
+                                    creator.address
+                                  );
+                                }}
+                                className="text-blue-600 hover:text-blue-800 text-sm font-semibold underline underline-offset-2 transition-all"
+                                title={`Click to copy address: ${creator.address}`}
+                              >
+                                {creator.name} ({creator.contributionPercent}%)
+                              </button>
+                            ))
+                          ) : (
+                            <p className="text-gray-700">Unknown</p>
+                          )}
+                        </div>
                       </div>
                       <div>
                         <span className="text-gray-500">Collection:</span>
-                        <p className="font-medium text-gray-900">
-                          Collection Name
-                        </p>
+                        <p className="font-medium text-gray-900">Brand NFT</p>
                       </div>
                       <div>
                         <span className="text-gray-500">Blockchain:</span>
-                        <p className="font-medium text-gray-900">Ethereum</p>
+                        <p className="font-medium text-gray-900">
+                          Story Aeneid Testnet
+                        </p>
                       </div>
                     </div>
 
                     {/* Placeholder for additional content */}
-                    <div className="bg-gray-50 p-4 rounded-xl">
+                    {/* <div className="bg-gray-50 p-4 rounded-xl">
                       <p className="text-gray-500 text-center italic">
                         Additional NFT details and metadata will be displayed
                         here
                       </p>
-                    </div>
+                    </div> */}
 
                     {/* Action Buttons Placeholder */}
                     <div className="flex gap-3 pt-4">
-                      <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl font-semibold transition-colors duration-200">
-                        Place Bid
+                      <button
+                        onClick={() =>
+                          window.open(
+                            `https://aeneid.explorer.story.foundation/ipa/${ipId}`, 
+                            "_blank"
+                          )
+                        }
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl font-semibold transition-colors duration-200"
+                      >
+                        View on StoryScan
                       </button>
+
                       <button className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 px-6 rounded-xl font-semibold transition-colors duration-200">
                         Make Offer
                       </button>
