@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -142,10 +141,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="relative space-y-6">
+    <div className="relative max-w-2xl mx-auto mt-10 bg-white dark:bg-[#18181b] rounded-2xl shadow-2xl p-8 border border-slate-200 dark:border-slate-700 space-y-8">
       {loading && <Loader />}
       {message && (
-        <div className="p-3 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 rounded shadow">
+        <div className="p-3 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 rounded shadow mb-4">
           {message}
         </div>
       )}
@@ -154,8 +153,9 @@ export default function Dashboard() {
         <form
           onSubmit={handleSubmit}
           encType="multipart/form-data"
-          className="space-y-5"
+          className="space-y-6"
         >
+          <label htmlFor="file-upload" className="block text-lg font-semibold text-slate-700 dark:text-slate-200 mb-2">Upload Image</label>
           <input
             id="file-upload"
             type="file"
@@ -168,128 +168,127 @@ export default function Dashboard() {
           <button
             disabled={!file}
             type="submit"
-            className="w-full px-5 py-3 text-base font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-800 focus:ring-sky-500 rounded-lg shadow-md transition-colors duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-5 py-3 text-base font-semibold text-white bg-gradient-to-r from-sky-600 to-emerald-500 hover:from-sky-700 hover:to-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 rounded-xl shadow-md transition-colors duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Upload
           </button>
         </form>
       ) : (
         <>
-          <div className="space-y-5 mt-5">
-            <h2 className="text-xl font-semibold text-slate-700 dark:text-slate-200">
-              Upload Successful!
-            </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              IPFS Hash: {imageData.ipfsHash}
-            </p>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              Image Hash: {imageData.imageHash}
-            </p>
+          <div className="space-y-3 mt-2 bg-sky-50 dark:bg-[#23232b] rounded-xl p-4 border border-sky-100 dark:border-slate-700">
+            <h2 className="text-xl font-bold text-sky-700 dark:text-sky-300">Upload Successful!</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 break-all">IPFS Hash: {imageData.ipfsHash}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 break-all">Image Hash: {imageData.imageHash}</p>
+            <img src={imageData.imageUrl} alt="Uploaded" className="w-32 h-32 object-cover rounded-lg border border-slate-200 dark:border-slate-700 mt-2" />
           </div>
 
-          <form onSubmit={handleMetadataSubmit} className="space-y-4 mt-6">
-            <h3 className="text-lg font-semibold">Enter Metadata</h3>
+          <form onSubmit={handleMetadataSubmit} className="space-y-6 mt-8">
+            <h3 className="text-lg font-bold text-slate-700 dark:text-slate-200 mb-2">Enter Metadata</h3>
 
             <input
               type="text"
               placeholder="Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-2 border rounded"
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-[#23232b] text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
               required
             />
             <textarea
               placeholder="Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-2 border rounded"
+              className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-[#23232b] text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
               required
             />
 
-            <h4 className="font-medium mt-4">Attributes</h4>
-            {attributes.map((attr, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  placeholder="Key"
-                  value={attr.key}
-                  onChange={(e) => {
-                    const newAttrs = [...attributes];
-                    newAttrs[index].key = e.target.value;
-                    setAttributes(newAttrs);
-                  }}
-                  className="w-1/2 px-2 py-1 border rounded"
-                />
-                <input
-                  type="text"
-                  placeholder="Value"
-                  value={attr.value}
-                  onChange={(e) => {
-                    const newAttrs = [...attributes];
-                    newAttrs[index].value = e.target.value;
-                    setAttributes(newAttrs);
-                  }}
-                  className="w-1/2 px-2 py-1 border rounded"
-                />
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => setAttributes([...attributes, { key: "", value: "" }])}
-              className="text-blue-600 hover:underline"
-            >
-              + Add Attribute
-            </button>
+            <div className="bg-slate-50 dark:bg-[#20202a] rounded-lg p-4 border border-slate-200 dark:border-slate-700">
+              <h4 className="font-semibold text-slate-700 dark:text-slate-200 mb-2">Attributes</h4>
+              {attributes.map((attr, index) => (
+                <div key={index} className="flex gap-2 mb-2">
+                  <input
+                    type="text"
+                    placeholder="Key"
+                    value={attr.key}
+                    onChange={(e) => {
+                      const newAttrs = [...attributes];
+                      newAttrs[index].key = e.target.value;
+                      setAttributes(newAttrs);
+                    }}
+                    className="w-1/2 px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-[#23232b] text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-sky-400"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Value"
+                    value={attr.value}
+                    onChange={(e) => {
+                      const newAttrs = [...attributes];
+                      newAttrs[index].value = e.target.value;
+                      setAttributes(newAttrs);
+                    }}
+                    className="w-1/2 px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-[#23232b] text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-sky-400"
+                  />
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => setAttributes([...attributes, { key: "", value: "" }])}
+                className="text-sky-600 hover:underline text-sm mt-1"
+              >
+                + Add Attribute
+              </button>
+            </div>
 
-            <h4 className="font-medium mt-4">Creators</h4>
-            {creators.map((creator, index) => (
-              <div key={index} className="grid grid-cols-3 gap-2 mb-2">
-                <input
-                  type="text"
-                  placeholder="Name"
-                  value={creator.name}
-                  onChange={(e) => {
-                    const newCreators = [...creators];
-                    newCreators[index].name = e.target.value;
-                    setCreators(newCreators);
-                  }}
-                  className="px-2 py-1 border rounded"
-                />
-                <input
-                  type="text"
-                  placeholder="Address"
-                  value={creator.address}
-                  onChange={(e) => {
-                    const newCreators = [...creators];
-                    newCreators[index].address = e.target.value;
-                    setCreators(newCreators);
-                  }}
-                  className="px-2 py-1 border rounded"
-                />
-                <input
-                  type="number"
-                  placeholder="contribution %"
-                  value={creator.contributionPercent}
-                  onChange={(e) => {
-                    const newCreators = [...creators];
-                    newCreators[index].contributionPercent = parseInt(e.target.value);
-                    setCreators(newCreators);
-                  }}
-                  className="px-2 py-1 border rounded"
-                />
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => setCreators([...creators, { name: "", address: "", contributionPercent: 0 }])}
-              className="text-blue-600 hover:underline"
-            >
-              + Add Creator
-            </button>
+            <div className="bg-slate-50 dark:bg-[#20202a] rounded-lg p-4 border border-slate-200 dark:border-slate-700">
+              <h4 className="font-semibold text-slate-700 dark:text-slate-200 mb-2">Creators</h4>
+              {creators.map((creator, index) => (
+                <div key={index} className="grid grid-cols-3 gap-2 mb-2">
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    value={creator.name}
+                    onChange={(e) => {
+                      const newCreators = [...creators];
+                      newCreators[index].name = e.target.value;
+                      setCreators(newCreators);
+                    }}
+                    className="px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-[#23232b] text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Address"
+                    value={creator.address}
+                    onChange={(e) => {
+                      const newCreators = [...creators];
+                      newCreators[index].address = e.target.value;
+                      setCreators(newCreators);
+                    }}
+                    className="px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-[#23232b] text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                  />
+                  <input
+                    type="number"
+                    placeholder="contribution %"
+                    value={creator.contributionPercent}
+                    onChange={(e) => {
+                      const newCreators = [...creators];
+                      newCreators[index].contributionPercent = parseInt(e.target.value);
+                      setCreators(newCreators);
+                    }}
+                    className="px-2 py-1 border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-[#23232b] text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                  />
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => setCreators([...creators, { name: "", address: "", contributionPercent: 0 }])}
+                className="text-emerald-600 hover:underline text-sm mt-1"
+              >
+                + Add Creator
+              </button>
+            </div>
 
             <button
               type="submit"
-              className="w-full px-5 py-3 text-base font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-5 py-3 text-base font-bold text-white bg-gradient-to-r from-emerald-600 to-sky-600 hover:from-emerald-700 hover:to-sky-700 rounded-xl shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed mt-4"
               disabled={loading}
             >
               Submit Metadata
