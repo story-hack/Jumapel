@@ -4,7 +4,7 @@
 ![AI Powered](https://img.shields.io/badge/AI-Powered-orange)
 ![Tomo Integrated](https://img.shields.io/badge/Tomo-Integrated-blue)
 
-> **Tokenize your product idea, secure its identity and creative ownership on the internet
+> Tokenize your product idea, secure its identity and creative ownership on the internet
 
 Jumapel is a decentralised platform that uses AI to generate unique brand names and domain suggestions tailored to your needs. Users can mint their chosen names as protected on-chain IP, securing their identity and creative ownership on the internet.
 
