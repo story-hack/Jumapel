@@ -1,8 +1,9 @@
 'use client';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAccount } from "wagmi";
+import { useMintNFT } from '@/hooks/useMintNFT';
 import Loader from "../../components/Loader";
+import { IpMetadata } from '@story-protocol/core-sdk';
 
 interface Creator {
   name: string;
@@ -13,17 +14,6 @@ interface Creator {
 interface Attribute {
   key: string;
   value: string;
-}
-
-interface IpMetadata {
-  title: string;
-  description: string;
-  creators: Creator[];
-  image: string;
-  imageHash: string;
-  mediaUrl: string;
-  mediaHash: string;
-  mediaType: string;
 }
 
 interface NftMetadata {
@@ -54,7 +44,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
-  const { address } = useAccount();
+  const { mintNFT, isLoading: isMinting, error: mintError } = useMintNFT();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -101,41 +91,44 @@ export default function Dashboard() {
     e.preventDefault();
     setLoading(true);
 
-    const metadataPayload: MetadataPayload = {
-      ipMetadata: {
-        title,
-        description,
-        creators,
-        image: imageData.imageUrl,
-        imageHash: imageData.imageHash,
-        mediaUrl: imageData.imageUrl,
-        mediaHash: imageData.imageHash,
-        mediaType: "image/jpeg",
-      },
+    const ipMetadata: IpMetadata = {
+      title,
+      description,
+      creators: creators.map(creator => ({
+        name: creator.name,
+        address: creator.address as `0x${string}`,
+        contributionPercent: creator.contributionPercent,
+      })),
+      image: imageData.imageUrl,
+      imageHash: imageData.imageHash as `0x${string}`,
+      mediaUrl: imageData.imageUrl,
+      mediaHash: imageData.imageHash as `0x${string}`,
+      mediaType: "image/jpeg",
+    };
+
+    const metadataPayload = {
+      ipMetadata,
       nftMetadata: {
         name: title,
         description,
         image: imageData.imageUrl,
         attributes,
       },
-      walletAddress: address || "",
     };
 
     try {
-      const finalRes = await fetch('/api/mintNft-resgisterIp-attachLicense', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(metadataPayload),
-      });
-      if (finalRes.ok) {
-        const responseData = await finalRes.json();
-        router.push(`/mint-success?brandName=${encodeURIComponent(title)}&redefinedIdea=${encodeURIComponent(description)}&logoUrl=${encodeURIComponent(imageData.imageUrl)}&ipId=${encodeURIComponent(responseData.ipId)}`);
+      const mintResult = await mintNFT(metadataPayload);
+      
+      if (mintResult) {
+        router.push(
+          `/mint-success?brandName=${encodeURIComponent(title)}&redefinedIdea=${encodeURIComponent(description)}&logoUrl=${encodeURIComponent(imageData.imageUrl)}&ipId=${encodeURIComponent(mintResult.ipId)}`
+        );
       } else {
-        setMessage("Something went wrong with the minting process.");
+        setMessage("Failed to mint NFT. Please try again.");
       }
     } catch (err) {
       console.error(err);
-      setMessage("Network error during minting.");
+      setMessage(mintError || "Network error during minting.");
     } finally {
       setLoading(false);
     }
@@ -287,12 +280,17 @@ export default function Dashboard() {
               </button>
             </div>
 
+            {mintError && (
+              <div className="text-red-500 mt-2">
+                {mintError}
+              </div>
+            )}
             <button
               type="submit"
-              className="w-full px-5 py-3 text-base font-bold text-white bg-gradient-to-r from-emerald-600 to-sky-600 hover:from-emerald-700 hover:to-sky-700 rounded-xl shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed mt-4"
-              disabled={loading}
+              disabled={loading || isMinting}
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Submit Metadata
+              {loading || isMinting ? 'Processing...' : 'Mint NFT'}
             </button>
           </form>
         </>
