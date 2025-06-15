@@ -74,7 +74,7 @@ export async function POST(req: Request) {
     let result;
     try {
       // Clean up common JSON issues from LLMs: remove trailing commas before } or ]
-      let jsonString = jsonMatch[0]
+      const jsonString = jsonMatch[0]
         .replace(/,\s*([}\]])/g, '$1') // Remove trailing commas
         .replace(/\n\s*\n/g, '\n'); // Remove double newlines (optional)
       result = JSON.parse(jsonString);

@@ -37,14 +37,13 @@ export default function Dashboard() {
 
   async function handleSend(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    
+
     // If we're in image upload mode and have a file, process the image
     if (showImageUpload && selectedFile) {
       await handleImageUpload();
       return;
     }
-    
-   
+
     if (!input.trim()) return;
     setMessages((prev) => [...prev, { role: "user", content: input }]);
     setLoading(true);
@@ -63,8 +62,7 @@ export default function Dashboard() {
         ...prev,
         {
           role: "agent",
-          content: `Brand: ${data.brandName}\n\nDomain: ${data.domain}\n\nRefined Idea: ${data.refinedIdea}\n\nMarket Value Estimate: ${data.marketValue.estimate}\n\nJustification: ${data.marketValue.justification}` +
-            (data.whitepaperPdfUrl ? `\n\nWhitepaper: [View PDF](${data.whitepaperPdfUrl})` : ""),
+          content: `Brand: ${data.brandName}<br><br>Domain: ${data.domain}<br><br>Refined Idea: ${data.refinedIdea}<br><br>Market Value Estimate: ${data.marketValue.estimate}<br><br>Justification: ${data.marketValue.justification}<br><br>Whitepaper: <a href="${data.whitepaperPdfUrl}" target="_blank" class="text-blue-400 underline">View PDF</a>`
         },
         {
           role: "agent",
@@ -73,7 +71,7 @@ export default function Dashboard() {
       ]);
       setShowImageUpload(true);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       setMessages((prev) => [
         ...prev,
         {
@@ -97,7 +95,7 @@ export default function Dashboard() {
 
   async function handleImageUpload() {
     if (!selectedFile) return;
-    
+
     const formData = new FormData();
     formData.append("file", selectedFile);
     setImageUploading(true);
@@ -145,7 +143,15 @@ export default function Dashboard() {
       });
       if (finalRes.ok) {
         const responseData = await finalRes.json();
-        router.push(`/mint-success?brandName=${encodeURIComponent(refinedIdeaData.brandName)}&redefinedIdea=${encodeURIComponent(refinedIdeaData.refinedIdea)}&logoUrl=${encodeURIComponent(data.imageUrl)}&ipId=${encodeURIComponent(responseData.ipId)}`);
+        router.push(
+          `/mint-success?brandName=${encodeURIComponent(
+            refinedIdeaData.brandName
+          )}&redefinedIdea=${encodeURIComponent(
+            refinedIdeaData.refinedIdea
+          )}&logoUrl=${encodeURIComponent(
+            data.imageUrl
+          )}&ipId=${encodeURIComponent(responseData.ipId)}`
+        );
       } else {
         setMessages((prev) => [
           ...prev,
@@ -212,8 +218,8 @@ export default function Dashboard() {
                 <span className="font-semibold text-base">Mint as NFT</span>
               </div>
               <div className="text-sm text-gray-700">
-                Review the AI&apos;s suggestion and mint your idea, brand, and domain
-                as an NFT onchain.
+                Review the AI&apos;s suggestion and mint your idea, brand, and
+                domain as an NFT onchain.
               </div>
             </div>
           </div>
@@ -225,10 +231,13 @@ export default function Dashboard() {
                 <div className="w-8 h-8 rounded-full bg-gradient-to-b from-[#ffb347] to-[#ffcc80] flex items-center justify-center text-lg font-bold">
                   4
                 </div>
-                <span className="font-semibold text-base">Check Market Value</span>
+                <span className="font-semibold text-base">
+                  Check Market Value
+                </span>
               </div>
               <div className="text-sm text-gray-700">
-                Instantly get an estimated market value for your idea based on its uniqueness and current trends.
+                Instantly get an estimated market value for your idea based on
+                its uniqueness and current trends.
               </div>
             </div>
           </div>
@@ -251,9 +260,8 @@ export default function Dashboard() {
                         ? "bg-[#0080ff] text-white self-end"
                         : "bg-[#232323] text-white border border-[#333] self-start"
                     }`}
-                  >
-                    {msg.content}
-                  </div>
+                    dangerouslySetInnerHTML={{ __html: msg.content }}
+                  />
                 </div>
               ))}
               {loading && !showImageUpload && (

@@ -20,7 +20,7 @@ export async function createWhitepaperPDF(whitepaper: {
   let y = 800;
   const sectionSpacing = 24;
   const lineSpacing = 18;
-  const maxWidth = 495;
+  // const maxWidth = 495;
   const fontSize = 12;
 
   function drawSection(title: string, content?: string) {
@@ -47,10 +47,11 @@ export async function createWhitepaperPDF(whitepaper: {
 }
 
 export async function uploadPDFToIPFS(pdfBuffer: Uint8Array, fileName = "whitepaper.pdf"): Promise<string> {
-  // Use Buffer directly for Pinata SDK in Node.js
-  const { IpfsHash } = await pinata.upload.file(Buffer.from(pdfBuffer), {
-    fileName,
-    contentType: "application/pdf",
+  const file = new File([pdfBuffer], fileName, {
+    type: "application/pdf",
+    lastModified: Date.now(),
   });
+  
+  const { IpfsHash } = await pinata.upload.file(file);
   return IpfsHash;
 }

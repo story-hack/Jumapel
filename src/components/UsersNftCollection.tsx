@@ -3,6 +3,7 @@
 import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
 import { NFTCard } from "./Card";
+import Loader from "./Loader";
 
 interface NFT {
   contract: {
@@ -157,7 +158,7 @@ export const UsersNftCollection = () => {
     fetchNFTs();
   }, [address]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loader /></div>;
   if (error) return <div>Error: {error}</div>;
   if (!address)
     return (
