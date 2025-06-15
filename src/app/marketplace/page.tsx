@@ -19,7 +19,10 @@ export default function NFTGallery() {
       address: string;
       contributionPercent: number;
     }[];
+    mediaUrl?: string;
+    mediaType?: string;
     ipId?: string;
+
   };
 
   const [nfts, setNfts] = useState<NFTMetadata[]>([]);
@@ -108,6 +111,7 @@ export default function NFTGallery() {
               description={nft.description || "No description available."}
               creators={nft.creators || []}
               ipId={nft.ipId}
+              pdf={nft.mediaType === "image/png" ? nft.mediaUrl : ""}
             />
             
           </div>
