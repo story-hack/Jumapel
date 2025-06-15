@@ -1,4 +1,5 @@
 import { openai } from "@/utils/openai";
+import { createWhitepaperPDF, uploadPDFToIPFS } from "@/utils/pdfWhitepaper";
 
 export async function POST(req: Request) {
   try {
@@ -22,6 +23,8 @@ export async function POST(req: Request) {
 
                     Step 4: Estimate the potential market value (in USD) of this idea based on its uniqueness, market trends, and comparable products. Provide a short justification for your estimate.
 
+                    Step 5: Generate a whitepaper for the idea consisting of introduction, background, problems, solution, possible technologies and conclusion
+
                     Return your answer in the following JSON format:
 
                     {
@@ -31,6 +34,14 @@ export async function POST(req: Request) {
                       "marketValue": {
                         "estimate": "...",
                         "justification": "..."
+                      },
+                      "whitepaper": {
+                        "introduction": "...",
+                        "background": "...",
+                        "problems": "...",
+                        "solution": "...",
+                        "technologies": "...",
+                        "conclusion": "..."
                       }
                     }
 
@@ -62,18 +73,40 @@ export async function POST(req: Request) {
 
     let result;
     try {
-      result = JSON.parse(jsonMatch[0]);
+      // Clean up common JSON issues from LLMs: remove trailing commas before } or ]
+      let jsonString = jsonMatch[0]
+        .replace(/,\s*([}\]])/g, '$1') // Remove trailing commas
+        .replace(/\n\s*\n/g, '\n'); // Remove double newlines (optional)
+      result = JSON.parse(jsonString);
     } catch (e) {
       const error = e as Error;
-      console.log("error parsing JSON:", error.message);
-      return Response.json({ brandName: "", domain: "N/A", raw: messageContent });
+      console.log("error parsing JSON after cleanup:", error.message);
+      return Response.json({
+        brandName: "",
+        domain: "N/A",
+        raw: messageContent,
+        jsonError: "Malformed JSON from agent. Please try again.",
+      });
+    }
+
+    // Generate PDF from whitepaper object and upload to IPFS
+    let whitepaperPdfUrl = "";
+    try {
+      if (result.whitepaper) {
+        const pdfBuffer = await createWhitepaperPDF(result.whitepaper);
+        const ipfsHash = await uploadPDFToIPFS(pdfBuffer, "whitepaper.pdf");
+        whitepaperPdfUrl = `https://orange-bright-loon-792.mypinata.cloud/ipfs/${ipfsHash}`;
+      }
+    } catch (e) {
+      console.error("Whitepaper PDF generation/upload failed:", e);
     }
 
     return Response.json({
       brandName: result.brandName || "",
       domain: result.availableDomain || result.domain || "N/A",
       refinedIdea: result.refinedIdea || "",
-      marketValue: result.marketValue || { estimate: "N/A", justification: "N/A" }
+      marketValue: result.marketValue || { estimate: "N/A", justification: "N/A" },
+      whitepaperPdfUrl,
     });
 
   } catch (error: unknown) {

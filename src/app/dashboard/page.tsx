@@ -63,7 +63,8 @@ export default function Dashboard() {
         ...prev,
         {
           role: "agent",
-          content: `Brand: ${data.brandName}\n\nDomain: ${data.domain}\n\nRefined Idea: ${data.refinedIdea}\n\nMarket Value Estimate: ${data.marketValue.estimate}\n\nJustification: ${data.marketValue.justification}`,
+          content: `Brand: ${data.brandName}\n\nDomain: ${data.domain}\n\nRefined Idea: ${data.refinedIdea}\n\nMarket Value Estimate: ${data.marketValue.estimate}\n\nJustification: ${data.marketValue.justification}` +
+            (data.whitepaperPdfUrl ? `\n\nWhitepaper: [View PDF](${data.whitepaperPdfUrl})` : ""),
         },
         {
           role: "agent",
