@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import confetti from "canvas-confetti";
+import Link from "next/link";
 
 export default function MintSuccessPage() {
   const searchParams = useSearchParams();
@@ -10,12 +11,14 @@ export default function MintSuccessPage() {
   const [redefinedIdea, setRedefinedIdea] = useState("");
   const [domain, setDomain] = useState("");
   const [logoUrl, setLogoUrl] = useState("/file.svg");
+  const [ipId, setIpId] = useState("");
 
   useEffect(() => {
     setBrandName(searchParams.get("brandName") || "");
     setRedefinedIdea(searchParams.get("redefinedIdea") || "");
     setDomain(searchParams.get("domain") || "");
     setLogoUrl(searchParams.get("logoUrl") || "/file.svg");
+    setIpId(searchParams.get("ipId") || "");
     confetti({
       particleCount: 120,
       spread: 90,
@@ -45,21 +48,34 @@ export default function MintSuccessPage() {
             <span className="font-semibold">Brand Name :</span> <span className="underline text-blue-900 font-medium">{brandName || <span className='text-gray-400'>N/A</span>}</span>
           </div>
           <div className="text-base text-black mb-3">
-            <span className="font-semibold">Redefined Idea :</span> <span className="underline text-blue-900 font-medium">{redefinedIdea || <span className='text-gray-400'>N/A</span>}</span>
+            <span className="font-semibold"> Idea :</span> <span className="underline text-blue-900 font-medium">{redefinedIdea || <span className='text-gray-400'>N/A</span>}</span>
           </div>
           <div className="text-base text-black mb-6">
             <span className="font-semibold">Domains :</span> {domain ? <a href={`https://${domain}`} target="_blank" rel="noopener noreferrer" className="underline text-blue-700">{domain}</a> : <span className="text-gray-400">N/A</span>}
           </div>
+          {ipId && (
+            <div className="text-base text-black mb-6">
+              <span className="font-semibold">View your IPA :</span>{" "}
+              <a 
+                href={`https://aeneid.explorer.story.foundation/ipa/${ipId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline text-blue-700 hover:text-blue-900"
+              >
+                View on Story Explorer
+              </a>
+            </div>
+          )}
           <div className="flex gap-6 mb-8">
             <a href="#" className="text-blue-700 underline text-base">Whitepaper</a>
             <a href="#" className="text-blue-700 underline text-base">MarketValue</a>
           </div>
-          <a
+          <Link
             href="/profile"
             className="inline-block px-5 py-4 rounded-xl bg-blue-600 text-white font-semibold text-lg shadow-lg hover:bg-blue-700 transition"
           >
             Your Profile
-          </a>
+          </Link>
         </div>
       </div>
     </div>

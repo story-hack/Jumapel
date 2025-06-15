@@ -141,7 +141,8 @@ export default function Dashboard() {
         body: JSON.stringify(metadataPayload),
       });
       if (finalRes.ok) {
-        router.push("/mint-success");
+        const responseData = await finalRes.json();
+        router.push(`/mint-success?brandName=${encodeURIComponent(refinedIdeaData.brandName)}&redefinedIdea=${encodeURIComponent(refinedIdeaData.refinedIdea)}&logoUrl=${encodeURIComponent(data.imageUrl)}&ipId=${encodeURIComponent(responseData.ipId)}`);
       } else {
         setMessages((prev) => [
           ...prev,

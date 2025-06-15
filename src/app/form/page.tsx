@@ -128,7 +128,8 @@ export default function Dashboard() {
         body: JSON.stringify(metadataPayload),
       });
       if (finalRes.ok) {
-        router.push("/mint-success");
+        const responseData = await finalRes.json();
+        router.push(`/mint-success?brandName=${encodeURIComponent(title)}&redefinedIdea=${encodeURIComponent(description)}&logoUrl=${encodeURIComponent(imageData.imageUrl)}&ipId=${encodeURIComponent(responseData.ipId)}`);
       } else {
         setMessage("Something went wrong with the minting process.");
       }
