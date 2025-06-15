@@ -30,6 +30,7 @@ Jumapel addresses the protection and commercialization of early-stage ideas with
    - Uses Artificial Intelligence to generate unique, relevant brand names
    - Context-aware suggestions based on user-submitted ideasReal-time volatility and correlation tracking
    - Tailored to product category, tone, and target audience
+   - Generates marketValue, Whitepaper for users based on their product's idea
 
 2. **Onchain Idea Tokenization**
    - Mints submitted ideas and generated brand names as NFTs
@@ -52,6 +53,7 @@ Jumapel leverages advanced AI and onchain protocols through multiple components:
 - Context-aware brand name generation (see `src/app/api/agentTest/route.ts`)
 - Creative, memorable, and relevant suggestions
 - Domain availability checks (real-time)
+- Market value prediction and Whitepaper generation
 
 **Brand Metadata Enrichment**
 - Product idea refinement and summarization
@@ -89,6 +91,8 @@ await fetch("/api/mintNft-resgisterIp-attachLicense", {
 **Effortless Brand Creation**
 - One-click brand & domain generation via chat UI (`src/app/dashboard/page.tsx`)
 - Automated IP metadata packaging
+- Predictive Market Value based on user's product idea
+- Product's Whitepaper generation
 
 **Onchain Minting**
 - Immutable proof of idea ownership
