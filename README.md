@@ -30,7 +30,7 @@ Jumapel addresses the protection and commercialization of early-stage ideas with
    - Uses Artificial Intelligence to generate unique, relevant brand names
    - Context-aware suggestions based on user-submitted ideasReal-time volatility and correlation tracking
    - Tailored to product category, tone, and target audience
-   - Generates marketValue, Whitepaper for users based on their product's idea
+   - Generates product market value and  whitepaper based on user product's idea
 
 2. **Onchain Idea Tokenization**
    - Mints submitted ideas and generated brand names as NFTs
