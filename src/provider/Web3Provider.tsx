@@ -1,6 +1,6 @@
 "use client";
 import '@tomo-inc/tomo-evm-kit/styles.css'
-import { getDefaultConfig, TomoEVMKitProvider, lightTheme , midnightTheme } from '@tomo-inc/tomo-evm-kit'
+import { getDefaultConfig, TomoEVMKitProvider, lightTheme  } from '@tomo-inc/tomo-evm-kit'
 import { WagmiProvider } from 'wagmi'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { mainnet, polygon, optimism, arbitrum, base, storyAeneid } from 'wagmi/chains'
@@ -37,7 +37,6 @@ export default function Web3Provider({ children }: { children: React.ReactNode }
             fontStack: 'system',
             overlayBlur: 'small',
             borderRadius: 'medium',
-            accentColor: '#7b3fe4',
             accentColorForeground: 'white',
           })}
         >

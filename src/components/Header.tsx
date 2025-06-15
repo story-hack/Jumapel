@@ -20,6 +20,18 @@ function Header() {
         </div>
         <nav className="hidden md:flex items-center gap-6 lg:gap-8">
           <Link
+            href="/dashboard"
+            className="text-white/90 dark:text-white/90 text-base lg:text-lg font-medium hover:text-white dark:hover:text-white transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-white hover:after:w-full after:transition-all after:duration-300"
+          >
+            Dashboard
+          </Link>
+          <Link
+            href="/form"
+            className="text-white/90 dark:text-white/90 text-base lg:text-lg font-medium hover:text-white dark:hover:text-white transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-white hover:after:w-full after:transition-all after:duration-300"
+          >
+            Form
+          </Link>
+          <Link
             href="/marketplace"
             className="text-white/90 dark:text-white/90 text-base lg:text-lg font-medium hover:text-white dark:hover:text-white transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-white hover:after:w-full after:transition-all after:duration-300"
           >
@@ -34,22 +46,10 @@ function Header() {
             Community
           </Link>
           <Link
-            href="/dashboard"
-            className="text-white/90 dark:text-white/90 text-base lg:text-lg font-medium hover:text-white dark:hover:text-white transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-white hover:after:w-full after:transition-all after:duration-300"
-          >
-            Dashboard
-          </Link>
-          <Link
             href="/profile"
             className="text-white/90 dark:text-white/90 text-base lg:text-lg font-medium hover:text-white dark:hover:text-white transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-white hover:after:w-full after:transition-all after:duration-300"
           >
             Profile
-          </Link>
-          <Link
-            href="/form"
-            className="text-white/90 dark:text-white/90 text-base lg:text-lg font-medium hover:text-white dark:hover:text-white transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-white hover:after:w-full after:transition-all after:duration-300"
-          >
-            Form
           </Link>
         </nav>
         <div className="flex items-center gap-2">

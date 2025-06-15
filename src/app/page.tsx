@@ -38,7 +38,7 @@ export default function Home() {
               </p>
 
               <div className="flex items-center gap-4 mt-8">
-                <div className="bg-[#0080ff] hover:bg-[#005fcc] transition-colors duration-200 text-white font-semibold text-lg px-8 py-3 rounded-full shadow-lg cursor-pointer select-none">
+                <div className="bg-[#2b6bff] hover:bg-[#005fcc] transition-colors duration-200 text-white font-semibold text-lg px-8 py-3 rounded-full shadow-lg cursor-pointer select-none">
                   <ConnectButton
                     accountStatus={{
                       smallScreen: "avatar",
