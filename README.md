@@ -9,7 +9,7 @@
 Jumapel is a decentralised platform that uses AI to generate unique brand names and domain suggestions tailored to your needs. Users can mint their chosen names as protected on-chain IP, securing their identity and creative ownership on the internet.
 
 <div align="center">
-  <img src="/public/logo.jpg" alt="YieldStark Logo" width="200" height="200"/>
+  <img src="/public/logo.jpg" alt="YieldStark Logo" width="200" height="170"/>
 </div>
 
 ## 🎯 Problem Statement
