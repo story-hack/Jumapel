@@ -28,7 +28,7 @@ Jumapel addresses the protection and commercialization of early-stage ideas with
 
 1. **AI-Powered Brand Intelligence**
    - Uses Artificial Intelligence to generate unique, relevant brand names
-   - Context-aware suggestions based on user-submitted ideasReal-time volatility and correlation tracking
+   - Context-aware suggestions based on user-submitted ideas
    - Tailored to product category, tone, and target audience
    - Generates product market value and  whitepaper based on user product's idea
 
