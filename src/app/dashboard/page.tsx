@@ -10,7 +10,7 @@ export default function Dashboard() {
     {
       role: "agent",
       content:
-        "Hi there 👋\nTell us your product idea, and we'll handle the rest.",
+        "Hi there 👋\nTell us your product idea along with your name \n(for example: 'I'm Ron, and my idea is...').\n\n We'll help refine it, find a domain, and mint it as an NFT!",
     },
   ]);
   const [input, setInput] = useState("");
@@ -27,6 +27,7 @@ export default function Dashboard() {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [refinedIdeaData, setRefinedIdeaData] = useState<{
+    creator: string;
     brandName: string;
     refinedIdea: string;
     domain: string;
@@ -64,7 +65,7 @@ export default function Dashboard() {
         ...prev,
         {
           role: "agent",
-          content: `Brand: ${data.brandName}<br><br>Domain: ${data.domain}<br><br>Refined Idea: ${data.refinedIdea}<br><br>Market Value Estimate: ${data.marketValue.estimate}<br><br>Justification: ${data.marketValue.justification}<br><br>Whitepaper: <a href="${data.whitepaperPdfUrl}" target="_blank" class="text-blue-400 underline">View PDF</a>`
+          content: `Brand: ${data.brandName}<br><br>Domain: ${data.domain}<br><br>Refined Idea: ${data.refinedIdea}<br><br>Market Value Estimate: ${data.marketValue.estimate}<br><br>Justification: ${data.marketValue.justification}<br><br>Whitepaper: <a href="${data.whitepaperPdfUrl}" target="_blank" class="text-blue-400 underline">View PDF</a>`,
         },
         {
           role: "agent",
@@ -122,7 +123,13 @@ export default function Dashboard() {
         ipMetadata: {
           title: refinedIdeaData.brandName,
           description: refinedIdeaData.refinedIdea,
-          creators: [],
+          creators: [
+            {
+              name: refinedIdeaData.creator,
+              address: address || "",
+              contributionPercent: 100,
+            },
+          ],
           image: data.imageUrl,
           imageHash: data.imageHash,
           mediaUrl: refinedIdeaData.whitepaperPdfUrl,
@@ -152,7 +159,9 @@ export default function Dashboard() {
             refinedIdeaData.refinedIdea
           )}&logoUrl=${encodeURIComponent(
             data.imageUrl
-          )}&ipId=${encodeURIComponent(responseData.ipId)}`
+          )}&ipId=${encodeURIComponent(responseData.ipId)}&whitepaper=${encodeURIComponent(
+            refinedIdeaData.whitepaperPdfUrl
+          )}`
         );
       } else {
         setMessages((prev) => [
@@ -247,7 +256,7 @@ export default function Dashboard() {
       </section>
       <section className="w-1/2 min-h-screen flex flex-col justify-center items-center bg-[#232323] p-0">
         <div className="w-full h-screen flex flex-col bg-[#222] rounded-none shadow-none">
-          <div className="flex-1 overflow-y-auto p-8 flex flex-col items-center justify-center">
+          <div className="flex-1 overflow-y-auto p-8 flex flex-col items-center justify-start max-h-[calc(100vh-120px)]">
             <div className="flex flex-col items-center justify-center w-full max-w-xl mx-auto">
               {messages.map((msg, i) => (
                 <div

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -12,6 +12,7 @@ export default function MintSuccessPage() {
   const [domain, setDomain] = useState("");
   const [logoUrl, setLogoUrl] = useState("/file.svg");
   const [ipId, setIpId] = useState("");
+  const [whitepaper, setWhitepaper] = useState("");
 
   useEffect(() => {
     setBrandName(searchParams.get("brandName") || "");
@@ -19,6 +20,8 @@ export default function MintSuccessPage() {
     setDomain(searchParams.get("domain") || "");
     setLogoUrl(searchParams.get("logoUrl") || "/file.svg");
     setIpId(searchParams.get("ipId") || "");
+    setWhitepaper(searchParams.get("whitepaper") || "");
+
     confetti({
       particleCount: 120,
       spread: 90,
@@ -42,21 +45,44 @@ export default function MintSuccessPage() {
           />
         </div>
         <div className="flex flex-col justify-center p-12 md:w-1/2 w-full">
-          <h2 className="text-3xl font-bold text-green-600 mb-3">Mint Successful!</h2>
-          <p className="text-lg text-black mb-6">Your brand has been tokenized as an NFT and registered as an IP asset!</p>
+          <h2 className="text-3xl font-bold text-green-600 mb-3">
+            Mint Successful!
+          </h2>
+          <p className="text-lg text-black mb-6">
+            Your brand has been tokenized as an NFT and registered as an IP
+            asset!
+          </p>
           <div className="text-base text-black mb-3">
-            <span className="font-semibold">Brand Name :</span> <span className="underline text-blue-900 font-medium">{brandName || <span className='text-gray-400'>N/A</span>}</span>
+            <span className="font-semibold">Brand Name :</span>{" "}
+            <span className="underline text-blue-900 font-medium">
+              {brandName || <span className="text-gray-400">N/A</span>}
+            </span>
           </div>
           <div className="text-base text-black mb-3">
-            <span className="font-semibold"> Idea :</span> <span className="underline text-blue-900 font-medium">{redefinedIdea || <span className='text-gray-400'>N/A</span>}</span>
+            <span className="font-semibold"> Idea :</span>{" "}
+            <span className="underline text-blue-900 font-medium">
+              {redefinedIdea || <span className="text-gray-400">N/A</span>}
+            </span>
           </div>
           <div className="text-base text-black mb-6">
-            <span className="font-semibold">Domains :</span> {domain ? <a href={`https://${domain}`} target="_blank" rel="noopener noreferrer" className="underline text-blue-700">{domain}</a> : <span className="text-gray-400">N/A</span>}
+            <span className="font-semibold">Domains :</span>{" "}
+            {domain ? (
+              <a
+                href={`https://${domain}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline text-blue-700"
+              >
+                {domain}
+              </a>
+            ) : (
+              <span className="text-gray-400">N/A</span>
+            )}
           </div>
           {ipId && (
             <div className="text-base text-black mb-6">
               <span className="font-semibold">View your IPA :</span>{" "}
-              <a 
+              <a
                 href={`https://aeneid.explorer.story.foundation/ipa/${ipId}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -67,8 +93,19 @@ export default function MintSuccessPage() {
             </div>
           )}
           <div className="flex gap-6 mb-8">
-            <a href="#" className="text-blue-700 underline text-base">Whitepaper</a>
-            <a href="#" className="text-blue-700 underline text-base">MarketValue</a>
+            {whitepaper && (
+              <a
+                href={whitepaper}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-700 underline text-base"
+              >
+                Whitepaper
+              </a>
+            )}
+            {/* <a href="#" className="text-blue-700 underline text-base">
+              MarketValue
+            </a> */}
           </div>
           <Link
             href="/profile"
