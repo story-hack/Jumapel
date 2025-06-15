@@ -243,6 +243,6 @@ Follow us for updates, insights, and behind-the-scenes development:
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
-Story Protocol
-Tomo 
-Encode Club
+ - Story Protocol
+ - Tomo 
+ - Encode Club
