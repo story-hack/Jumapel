@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 import path from "path";
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   eslint: {
@@ -19,7 +22,7 @@ const nextConfig: NextConfig = {
   webpack(config) {
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
-      "@": path.resolve(__dirname), // 👈 this is the fix
+      "@": path.resolve(__dirname, "src"), // 👈 this is the fix
     };
     return config;
   },

@@ -1,3 +1,5 @@
+"use client";
+
 import { ConnectButton } from "@tomo-inc/tomo-evm-kit";
 import Image from "next/image";
 import Link from "next/link";
