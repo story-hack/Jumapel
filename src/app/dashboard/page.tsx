@@ -4,6 +4,9 @@ import React, { useState, useRef } from "react";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
+import { useMintNFT } from "@/hooks/useMintNFT";
+import { IpMetadata } from "@story-protocol/core-sdk";
+import { Address } from "viem";
 
 export default function Dashboard() {
   const [messages, setMessages] = useState([
@@ -19,11 +22,6 @@ export default function Dashboard() {
   const [, setError] = useState("");
   const [showImageUpload, setShowImageUpload] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [, setImageData] = useState<{
-    ipfsHash: string;
-    imageHash: string;
-    imageUrl: string;
-  } | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [refinedIdeaData, setRefinedIdeaData] = useState<{
@@ -37,6 +35,7 @@ export default function Dashboard() {
     pdfHash: string;
   } | null>(null);
   const { address } = useAccount();
+  const { mintNFT, isLoading: isMinting, error: mintError } = useMintNFT();
 
   async function handleSend(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -109,14 +108,8 @@ export default function Dashboard() {
       });
       const data = await imageRes.json();
 
-      setImageData({
-        ipfsHash: data.IpfsHash,
-        imageHash: data.imageHash,
-        imageUrl: data.imageUrl,
-      });
-
-      if (!refinedIdeaData) {
-        throw new Error("No brand data available");
+      if (!refinedIdeaData || !address) {
+        throw new Error("No brand data or wallet address available");
       }
 
       const metadataPayload = {
@@ -126,32 +119,27 @@ export default function Dashboard() {
           creators: [
             {
               name: refinedIdeaData.creator,
-              address: address || "",
+              address: address as Address,
               contributionPercent: 100,
             },
           ],
           image: data.imageUrl,
-          imageHash: data.imageHash,
+          imageHash: data.imageHash as `0x${string}`,
           mediaUrl: refinedIdeaData.whitepaperPdfUrl,
-          mediaHash: refinedIdeaData.pdfHash,
+          mediaHash: refinedIdeaData.pdfHash as `0x${string}`,
           mediaType: "image/png",
-        },
+        } as IpMetadata,
         nftMetadata: {
           name: refinedIdeaData.brandName,
           description: refinedIdeaData.refinedIdea,
           image: data.imageUrl,
           attributes: [],
         },
-        walletAddress: address || "",
       };
 
-      const finalRes = await fetch("/api/mintNft-resgisterIp-attachLicense", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(metadataPayload),
-      });
-      if (finalRes.ok) {
-        const responseData = await finalRes.json();
+      const mintResult = await mintNFT(metadataPayload);
+      
+      if (mintResult) {
         router.push(
           `/mint-success?brandName=${encodeURIComponent(
             refinedIdeaData.brandName
@@ -159,7 +147,7 @@ export default function Dashboard() {
             refinedIdeaData.refinedIdea
           )}&logoUrl=${encodeURIComponent(
             data.imageUrl
-          )}&ipId=${encodeURIComponent(responseData.ipId)}&whitepaper=${encodeURIComponent(
+          )}&ipId=${encodeURIComponent(mintResult.ipId)}&whitepaper=${encodeURIComponent(
             refinedIdeaData.whitepaperPdfUrl
           )}`
         );
@@ -168,7 +156,7 @@ export default function Dashboard() {
           ...prev,
           {
             role: "agent",
-            content: "Something went wrong with the minting process.",
+            content: mintError || "Something went wrong with the minting process.",
           },
         ]);
       }
@@ -176,7 +164,7 @@ export default function Dashboard() {
       console.error(err);
       setMessages((prev) => [
         ...prev,
-        { role: "agent", content: "Network error during minting." },
+        { role: "agent", content: mintError || "Network error during minting." },
       ]);
     } finally {
       setImageUploading(false);
@@ -185,7 +173,7 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen w-full flex">
-      {(loading || imageUploading) && <Loader />}
+      {(loading || imageUploading || isMinting) && <Loader />}
       <section className="w-1/2 min-h-screen flex flex-col justify-center items-center bg-[#181818] p-12">
         <div className="w-full flex flex-wrap gap-6">
           <div className="flex-1 bg-gradient-to-br from-[#232323] to-[#111] rounded-2xl p-6 shadow-lg text-white min-w-[220px] max-w-xs flex flex-col justify-between">
