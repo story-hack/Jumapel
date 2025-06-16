@@ -1,5 +1,5 @@
-import { openai } from "@/utils/openai";
-import { createWhitepaperPDF, uploadPDFToIPFS } from "@/utils/pdfWhitepaper";
+import { openai } from "../../../utils/openai";
+import { createWhitepaperPDF, uploadPDFToIPFS } from "../../../utils/pdfWhitepaper";
 import { toHex } from "viem";
 
 export async function POST(req: Request) {

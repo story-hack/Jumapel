@@ -1,7 +1,7 @@
 'use client';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMintNFT } from '@/hooks/useMintNFT';
+import { useMintNFT } from '../../hooks/useMintNFT';
 import Loader from "../../components/Loader";
 import { IpMetadata } from '@story-protocol/core-sdk';
 

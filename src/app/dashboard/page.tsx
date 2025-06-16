@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import Loader from "@/components/Loader";
+import Loader from "../../components/Loader";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
-import { useMintNFT } from "@/hooks/useMintNFT";
+import { useMintNFT } from "../../hooks/useMintNFT";
 import { IpMetadata } from "@story-protocol/core-sdk";
 import { Address } from "viem";
 

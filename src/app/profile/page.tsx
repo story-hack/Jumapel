@@ -1,4 +1,4 @@
-import { UsersNftCollection } from "@/components/UsersNftCollection";
+import { UsersNftCollection } from "../../components/UsersNftCollection";
 
 export default function Profile() {
   return (

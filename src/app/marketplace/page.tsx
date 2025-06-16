@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { NFTCard } from "../../components/Card";
-import Loader from "@/components/Loader";
+import Loader from "../../components/Loader";
 
 const API_KEY = "MhBsxkU1z9fG6TofE59KqiiWV-YlYE8Q4awlLQehF3U";
 const CHAIN = "story-aeneid";
