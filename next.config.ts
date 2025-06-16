@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    domains: ['api.storyapis.com'],
   },
   transpilePackages:[
     '@tomo-inc/tomo-evm-kit',
