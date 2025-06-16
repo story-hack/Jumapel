@@ -51,9 +51,9 @@ export const useMintNFT = () => {
       const tomoOptimizedOptions = {
         waitForTransaction: true,
         // Use exact gas from your successful transaction + buffer
-        gasLimit: BigInt(500000), // Conservative but not excessive
+        gasLimit: BigInt(1500000), // Conservative but not excessive
         // Use simple gas price - avoid complex EIP-1559 params
-        gasPrice: BigInt(1500000007), // Use the exact effectiveGasPrice from your receipt
+        gasPrice: BigInt(2000000000), // Use the exact effectiveGasPrice from your receipt
         // Remove all EIP-1559 specific fields for maximum compatibility
       };
       
@@ -71,8 +71,8 @@ export const useMintNFT = () => {
       // Fallback with exact values from your working transaction
       return {
         waitForTransaction: true,
-        gasLimit: BigInt(500000),
-        gasPrice: BigInt(1500000007), // Exact value from your receipt
+        gasLimit: BigInt(1500000),
+        gasPrice: BigInt(2000000000), // Exact value from your receipt
       };
     }
   };
@@ -215,7 +215,7 @@ export const useMintNFT = () => {
           
           const legacyTxOptions = {
             waitForTransaction: true,
-            gasLimit: BigInt(5000000),
+            gasLimit: BigInt(15000000),
             gasPrice: BigInt(2000000000), // 2 gwei
             type: '0x0' as const, // Force legacy transaction
           };
