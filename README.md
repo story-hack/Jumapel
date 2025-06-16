@@ -196,7 +196,28 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### .env details
+ - WALLET AUTHENTICATION (USE A BURNER WALLET FOR THIS / CREATE A NEW WALLET)
+ - WALLET_PRIVATE_KEY=
+
+ - STORY PROTOCOL AENIED TESTNET RPC URL - https://aeneid.storyrpc.io/
+ - RPC_PROVIDER_URL=
+
+========== Third-Party Service Credentials ==========
+ - Tomo client ID for authentication with Tomo services
+ - NEXT_PUBLIC_TOMO_CLIENT_ID=
+ - NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=
+
+========== AI & Storage API Keys ==========
+ - OpenAI API key for accessing GPT models (keep this secret!)
+   OPENAI_API_KEY=your_openai_api_key_here
+
+ - Pinata JWT for uploading files to IPFS via Pinata (keep this secret!)
+ - PINATA_JWT=your_pinata_jwt_here
+
+ - Alchemy API key for blockchain data and services (optional, if using Alchemy)
+ - ALCHEMY_API_KEY=your_alchemy_api_key_here
+ - Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## 📚 Documentation
 
