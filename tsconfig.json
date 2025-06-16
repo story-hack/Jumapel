@@ -19,7 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"]
     }
   },
   "include": [
@@ -27,7 +27,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/api/mint-and-register"
-, "src/utils/openai.js", "src/utils/openai.js"  ],
+    "src/app/api/mint-and-register",
+    "src/utils/openai.js",
+    "src/utils/openai.js"
+  ],
   "exclude": ["node_modules"]
 }
